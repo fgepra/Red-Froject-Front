@@ -3,14 +3,27 @@ import { NextPage } from 'next';
 import { LockKeyhole, UserRound } from 'lucide-react';
 import { useState, FormEvent } from 'react';
 
+const VALID_ID = 'uiseong';
+const VALID_PW = 'wda!@*&mom@!*&*wmp';
+
 const LoginPage: NextPage = () => {
   const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: 실제 로그인 처리로직 추가
-    console.log('로그인 시도', { id, password });
+    if (id === VALID_ID && password === VALID_PW) {
+      console.log('로그인 성공', { id });
+      setSuccess('로그인 성공!');
+    }else if (id !== VALID_ID && password !== VALID_PW) {
+      setError('아이디 및 비밀번호 모두 일치하지 않습니다.');
+    } else if (id !== VALID_ID) {
+      setError('아이디가 일치하지 않습니다.');
+    } else if (password !== VALID_PW) {
+      setError('비밀번호가 일치하지 않습니다.');
+    }
   };
 
   return (
@@ -38,7 +51,8 @@ const LoginPage: NextPage = () => {
           />
         </div>
 
-        <div className="forgot">비밀번호를 잊으셨나요?</div>
+        {success && <div className="success">{success}</div>}
+        {error && <div className="error">{error}</div>}
 
         <button type="submit" disabled={!id || !password}>
           로그인
@@ -73,7 +87,7 @@ const LoginPage: NextPage = () => {
           padding: 14px 16px;
           background: #fafafa;
           border-radius: 8px;
-          margin-bottom: 20px;
+          margin-bottom: 12px;
         }
         .input-group :global(svg) {
           flex-shrink: 0;
@@ -88,16 +102,20 @@ const LoginPage: NextPage = () => {
           font-size: 16px;
           color: #333;
         }
-        /* placeholder 색상 명시 */
         .input-group input::placeholder {
           color: #aaa;
         }
-        .forgot {
-          font-size: 13px;
-          color: #999;
-          text-align: right;
-          margin-bottom: 28px;
-          cursor: pointer;
+        .success {
+          color: #3FE87F;
+          font-size: 14px;
+          margin-bottom: 16px;
+          text-align: center;
+        }
+        .error {
+          color: #e63946;
+          font-size: 14px;
+          margin-bottom: 16px;
+          text-align: center;
         }
         button {
           width: 100%;
